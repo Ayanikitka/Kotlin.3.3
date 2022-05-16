@@ -4,34 +4,30 @@ object ChatService {
     private var nextChatId = 0
     private var nextMessageId = 0
 
-    fun getUnreadChatsCount(userId: Int): Int {
-        val user = users.last { it.id == userId }
-        val filteredChats = user.chats
-            .filter { it.messages
+    fun getUnreadChatsCount(userId: Int): Int =
+        users.last { it.id == userId }
+            .chats.filter { it.messages
                     .any { !it.isRead && it.recipientId == userId }
             }
-        return filteredChats.size
-    }
+            .size
 
-    fun getChats(userId: Int): MutableList<Chat>? {
-        val currentChats = users
+
+    fun getChats(userId: Int): MutableList<Chat> =
+        users
             .last { it.id == userId }
             .chats
-        return if (currentChats.size != 0) currentChats else null
-    }
 
     fun getMessages(
         userId: Int,
         chatId: Int,
         messageId: Int,
         messageCount: Int
-    ): List<Message> {
-        val user = users.last { it.id == userId }
-        val chat = user.chats.last { it.id == chatId }
-        return chat.messages
+    ): List<Message> =
+        users
+            .last { it.id == userId }.chats
+            .last { it.id == chatId }.messages
             .filter { it.id >= messageId }
             .take(messageCount)
-    }
 
     fun createMessage(
         senderId: Int,
@@ -74,10 +70,13 @@ object ChatService {
         chatId: Int,
         messageId: Int
     ): Int {
-        val user = users.last { it.id == userId }
-        val chat = user.chats.last { it.id == chatId }
-        chat.messages.removeIf { it.id == messageId }
-        user.chats.removeIf { it.messages.size == 0 }
+        users
+            .last { it.id == userId }.chats
+            .last { it.id == chatId }.messages
+            .removeIf { it.id == messageId }
+        users
+            .last { it.id == userId }.chats
+            .removeIf { it.messages.size == 0 }
         return 1
     }
 
@@ -85,8 +84,9 @@ object ChatService {
         userId: Int,
         chatId: Int
     ):Int {
-        val user = users.last { it.id == userId }
-        user.chats.removeIf { it.id == chatId }
+        users
+            .last { it.id == userId }.chats
+            .removeIf { it.id == chatId }
         return 1
     }
 

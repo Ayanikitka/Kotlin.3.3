@@ -13,7 +13,7 @@ class ChatServiceTest {
 
         val chats = ChatService.getChats(0)
 
-        assertEquals(1, chats?.size)
+        assertEquals(1, chats.size)
     }
 
     @Test
@@ -26,7 +26,7 @@ class ChatServiceTest {
 
         val chats = ChatService.getChats(2)
 
-        assertNull(chats)
+        assertEquals(0, chats.size)
     }
 
     @Test
